@@ -11,7 +11,7 @@ import ObjectMapper
 
 class ProductMapModel: Mappable {
     
-    var id: Int?
+    var id: Int16?
     var name: String?
     var dateAdded: String?
     

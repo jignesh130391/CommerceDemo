@@ -15,10 +15,7 @@ class CategoriesVC: UIViewController {
     
     //MARK:- Variables
     static let identifier = "CategoriesVC"
-    lazy var arrCategories : [Category]? = {
-        return DBHelper.getCategories(parentId: parentCat?.id ?? 0)
-    }()
-    
+    var arrCategories : [Category]? = nil
     var parentCat : Category? = nil
     
     //MARK:- View Lifecycle
@@ -26,6 +23,18 @@ class CategoriesVC: UIViewController {
         super.viewDidLoad()
         
         setUI()
+        if parentCat == nil{
+            
+            if !UserDefaults.standard.bool(forKey: "IS_DATA_LOADED"){
+                
+                UtilityHelper.getData { [weak self] isSucceed in
+                    self?.getDetails()
+                }
+                UserDefaults.standard.set(true, forKey: "IS_DATA_LOADED")
+            }else{
+                self.getDetails()
+            }
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -36,12 +45,20 @@ class CategoriesVC: UIViewController {
     //MARK:- Set UI
     func setUI(){
         
-        self.navigationItem.title = "Category"
+        self.navigationItem.title = parentCat?.name ?? "Category"
         self.navigationItem.hidesBackButton = true
+        tblCategory.estimatedRowHeight = 35.0
+        tblCategory.rowHeight = UITableView.automaticDimension
         
         if parentCat != nil{
             self.displayBackButton()
         }
+    }
+    
+    //MARK:- Get Details
+    func getDetails(){
+        arrCategories = DBHelper.getCategories(parentId: parentCat?.id ?? 0)
+        tblCategory.reloadData()
     }
 }
 
@@ -57,29 +74,37 @@ extension CategoriesVC : UITableViewDelegate, UITableViewDataSource{
         return arrCategories?.count ?? 0
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 35.0
-    }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tblCategory.dequeueReusableCell(withIdentifier: CategoryCell.identifier) as! CategoryCell
         
         if let categoryDet = arrCategories?[indexPath.row]{
-            cell.lblName.text = categoryDet.name ?? "-"
+            cell.lblName.text = categoryDet.name ?? DATA_NOT_FOUND.DASH.rawValue
         }else{
-            cell.lblName.text = "-"
+            cell.lblName.text = DATA_NOT_FOUND.DASH.rawValue
         }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if let categoryDet = arrCategories?[indexPath.row]{
-            let storyVC = UIStoryboard(name: StoryBoardName.PRODUCT, bundle: nil)
-            if let catVC = storyVC.instantiateViewController(withIdentifier: CategoriesVC.identifier) as? CategoriesVC{
-                catVC.parentCat = categoryDet
-                self.navigationController?.pushViewController(catVC, animated: true)
+        if let categoryDet = arrCategories?[indexPath.row], let arrChildCat = DBHelper.getCategories(parentId: categoryDet.id){
+            
+            if !arrChildCat.isEmpty{
+                
+                let storyVC = UIStoryboard(name: StoryBoardName.PRODUCT, bundle: nil)
+                if let catVC = storyVC.instantiateViewController(withIdentifier: CategoriesVC.identifier) as? CategoriesVC{
+                    catVC.parentCat = categoryDet
+                    catVC.arrCategories = arrChildCat
+                    self.navigationController?.pushViewController(catVC, animated: true)
+                }
+            }else{
+                
+                let storyVC = UIStoryboard(name: StoryBoardName.PRODUCT, bundle: nil)
+                if let prodVC = storyVC.instantiateViewController(withIdentifier: ProductsVC.identifier) as? ProductsVC{
+                    prodVC.category = categoryDet
+                    self.navigationController?.pushViewController(prodVC, animated: true)
+                }
             }
         }
     }

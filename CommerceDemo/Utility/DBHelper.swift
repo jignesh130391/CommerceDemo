@@ -13,6 +13,7 @@ class DBHelper{
     
     static let managedContext = UtilityHelper.getAppDelegate().managedObjectContext
     
+    //MARK:- Category
     static func addCategories(category : CategoryMapModel){
         
         if let idCat = category.id{
@@ -68,6 +69,42 @@ class DBHelper{
         do {
             let results = try managedContext.fetch(fetchRequest);
             return results as? [Category]
+            
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+            return nil
+        }
+    }
+    
+    //MARK:- Products
+    static func addProduct(product : ProductMapModel, categoryId : Int16){
+        
+        if let idProduct = product.id{
+            
+            let entity = NSEntityDescription.entity(forEntityName: Table.PRODUCT.rawValue, in: managedContext)!
+            let productDB = NSManagedObject(entity: entity, insertInto: managedContext) as! Product
+            productDB.id = idProduct
+            productDB.name = product.name
+            productDB.addedDate = DateUtility.convertStringToTimeStamp(dateString: product.dateAdded, currentFormat: DateUtility.DATE_FORMAT_T_Z)
+            productDB.categoryId = categoryId
+            
+            do {
+                try managedContext.save()
+                
+            } catch let error as NSError  {
+                print("Could not save \(error), \(error.userInfo)")
+            }
+        }
+    }
+    
+    static func getProducts(catId : Int16) -> [Product]?{
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Table.PRODUCT.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "categoryId = %d", catId)
+        
+        do {
+            let results = try managedContext.fetch(fetchRequest);
+            return results as? [Product]
             
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")

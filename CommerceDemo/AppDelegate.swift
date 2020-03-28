@@ -18,11 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        if !UserDefaults.standard.bool(forKey: "IS_DATA_LOADED"){
-            UtilityHelper.getData()
-            UserDefaults.standard.set(true, forKey: "IS_DATA_LOADED")
-        }
-        
         return true
     }
 

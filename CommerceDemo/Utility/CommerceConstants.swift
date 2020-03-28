@@ -72,4 +72,11 @@ enum AppFontSize: CGFloat {
 enum Table : String{
     
     case CATEGORY = "Category"
+    case PRODUCT = "Product"
+}
+
+enum DATA_NOT_FOUND : String{
+    
+    case DASH = "-"
+    case TIME = "--:--"
 }

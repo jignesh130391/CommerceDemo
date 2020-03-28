@@ -55,7 +55,7 @@ extension UtilityHelper{
     }
     
     
-    static func getData(){
+    static func getData(completion: ((Bool)->(Void))?){
         
         if let url = URL(string: URLConstants.SERVER_URL){
             
@@ -70,6 +70,13 @@ extension UtilityHelper{
                         for category in arrCategories{
                             
                             DBHelper.addCategories(category: category)
+                            
+                            if let products = category.products, !products.isEmpty{
+                                
+                                for product in products{
+                                    DBHelper.addProduct(product: product, categoryId: category.id ?? 0)
+                                }
+                            }
                         }
                         
                         let arrCatWithSubCat = arrCategories.filter({ (catModel) -> Bool in
@@ -91,6 +98,8 @@ extension UtilityHelper{
                         }
                     }
                 }
+                
+                completion?(true)
             }
         }
     }
