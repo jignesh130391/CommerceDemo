@@ -15,6 +15,7 @@ extension UIViewController{
         
         DispatchQueue.main.async {
             let btnBack = UIBarButtonItem(image: UIImage(named: "Back"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(self.btnBackClicked))
+            btnBack.tintColor = UIColor.black
             self.navigationItem.leftBarButtonItem = btnBack
         }
     }
@@ -22,6 +23,23 @@ extension UIViewController{
     @IBAction func btnBackClicked(){
         self.view.endEditing(true)
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    func displayRateButton(){
+        
+        DispatchQueue.main.async {
+            let btnRate = UIBarButtonItem(image: UIImage(named: "Ranking"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(self.btnRatingClicked))
+            btnRate.tintColor = UIColor.black
+            self.navigationItem.rightBarButtonItem = btnRate
+        }
+    }
+    
+    @IBAction func btnRatingClicked(){
+        self.view.endEditing(true)
+        
+        let storyBoard = UIStoryboard(name: StoryBoardName.PRODUCT, bundle: nil)
+        let vc = storyBoard.instantiateViewController(withIdentifier: RatingVC.identifier) as! RatingVC
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 

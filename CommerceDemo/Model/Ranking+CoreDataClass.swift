@@ -1,5 +1,5 @@
 //
-//  Category+CoreDataClass.swift
+//  Ranking+CoreDataClass.swift
 //  CommerceDemo
 //
 //  Created by Jignesh on 29/03/20.
@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-@objc(Category)
-public class Category: NSManagedObject {
+@objc(Ranking)
+public class Ranking: NSManagedObject {
 
 }

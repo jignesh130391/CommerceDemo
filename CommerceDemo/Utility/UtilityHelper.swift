@@ -63,6 +63,11 @@ extension UtilityHelper{
                 
                 if let response = resp as? [String:Any], error == nil{
                     
+                    var arrRanking : [RankingMapModel] = []
+                    if let ranking = response["rankings"] as? [[String:Any]], !ranking.isEmpty{
+                        arrRanking = self.getRankings(ranking: ranking)
+                    }
+                    
                     if let categories = response["categories"] as? [[String:Any]], !categories.isEmpty{
                         
                         let arrCategories : [CategoryMapModel] = Mapper().mapArray(JSONArray: categories)
@@ -74,33 +79,104 @@ extension UtilityHelper{
                             if let products = category.products, !products.isEmpty{
                                 
                                 for product in products{
-                                    DBHelper.addProduct(product: product, categoryId: category.id ?? 0)
+                                    
+                                    let rankDetails = arrRanking.first(where: { (rankModel) -> Bool in
+                                        return rankModel.id == product.id
+                                    })
+                                    
+                                    DBHelper.addProduct(product: product, categoryId: category.id ?? 0, rankDetails: rankDetails)
                                 }
                             }
                         }
                         
-                        let arrCatWithSubCat = arrCategories.filter({ (catModel) -> Bool in
-                            return (catModel.childCategories?.count ?? 0) > 0
-                        })
+                        self.addChildCategories(arrCategories: arrCategories)
+                    }
+                    
+                    completion?(true)
+                }else{
+                    completion?(false)
+                }
+                
+            }
+        }
+    }
+    
+    static func addChildCategories(arrCategories : [CategoryMapModel]){
+        
+        let arrCatWithSubCat = arrCategories.filter({ (catModel) -> Bool in
+            return (catModel.childCategories?.count ?? 0) > 0
+        })
+        
+        if !arrCatWithSubCat.isEmpty{
+            
+            for category in arrCatWithSubCat{
+                
+                if let childCats = category.childCategories, let parentId = category.id, !childCats.isEmpty{
+                    
+                    for childId in childCats{
                         
-                        if !arrCatWithSubCat.isEmpty{
+                        _ = DBHelper.updateCategoryForParentId(id: childId, parentId: parentId)
+                    }
+                }
+            }
+        }
+    }
+    
+    static func getRankings(ranking : [[String:Any]]) -> [RankingMapModel]{
+        
+        var arrRanking : [RankingMapModel] = []
+        
+        for rank in ranking{
+            
+            if let products = rank["products"] as? [[String:Any]], !products.isEmpty{
+                
+                for productDetails in products{
+                    
+                    if let prodId = productDetails["id"] as? Int16{
+                        
+                        if let viewCount = productDetails["view_count"] as? Int64{
+                            if let existRank = arrRanking.first(where: { (rankModel) -> Bool in
+                                return (rankModel.id ?? 0) == prodId
+                            }){
+                                existRank.viewCount = viewCount
+                            }else{
+                                let newRank = RankingMapModel()
+                                newRank.id = prodId
+                                newRank.viewCount = viewCount
+                                arrRanking.append(newRank)
+                            }
+                        }
+                        if let orderCount = productDetails["order_count"] as? Int64{
                             
-                            for category in arrCatWithSubCat{
-                                
-                                if let childCats = category.childCategories, let parentId = category.id, !childCats.isEmpty{
-                                    
-                                    for childId in childCats{
-                                        
-                                        _ = DBHelper.updateCategoryForParentId(id: childId, parentId: parentId)
-                                    }
-                                }
+                            if let existRank = arrRanking.first(where: { (rankModel) -> Bool in
+                                return (rankModel.id ?? 0) == prodId
+                            }){
+                                existRank.orderCount = orderCount
+                            }else{
+                                let newRank = RankingMapModel()
+                                newRank.id = prodId
+                                newRank.orderCount = orderCount
+                                arrRanking.append(newRank)
+                            }
+                        }
+                        if let shareCount = productDetails["shares"] as? Int64{
+                            
+                            if let existRank = arrRanking.first(where: { (rankModel) -> Bool in
+                                return (rankModel.id ?? 0) == prodId
+                            }){
+                                existRank.shareCount = shareCount
+                            }else{
+                                let newRank = RankingMapModel()
+                                newRank.id = prodId
+                                newRank.shareCount = shareCount
+                                arrRanking.append(newRank)
                             }
                         }
                     }
                 }
-                
-                completion?(true)
             }
         }
+
+        return arrRanking
     }
 }

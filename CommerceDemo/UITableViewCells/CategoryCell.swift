@@ -17,6 +17,6 @@ class CategoryCell : UITableViewCell{
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        lblName.configureWithFont(fontName: AppFont.SFProDisplay_Semibold, fontSize: .Heading, andColor: .Gray97)
+        lblName.configureWithFont(fontName: AppFont.SFProDisplay_Regular, fontSize: .Heading, andColor: .Gray97)
     }
 }

@@ -28,9 +28,11 @@ class CategoriesVC: UIViewController {
             if !UserDefaults.standard.bool(forKey: "IS_DATA_LOADED"){
                 
                 UtilityHelper.getData { [weak self] isSucceed in
-                    self?.getDetails()
+                    if isSucceed{
+                        self?.getDetails()
+                        UserDefaults.standard.set(true, forKey: "IS_DATA_LOADED")
+                    }
                 }
-                UserDefaults.standard.set(true, forKey: "IS_DATA_LOADED")
             }else{
                 self.getDetails()
             }
@@ -49,9 +51,12 @@ class CategoriesVC: UIViewController {
         self.navigationItem.hidesBackButton = true
         tblCategory.estimatedRowHeight = 35.0
         tblCategory.rowHeight = UITableView.automaticDimension
+        tblCategory.tableFooterView = UIView(frame: .zero)
         
         if parentCat != nil{
             self.displayBackButton()
+        }else{
+            self.displayRateButton()
         }
     }
     

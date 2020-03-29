@@ -10,9 +10,18 @@
         <attribute name="categoryId" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="ranking" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Ranking" inverseName="product" inverseEntity="Ranking" syncable="YES"/>
+    </entity>
+    <entity name="Ranking" representedClassName="Ranking" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="orderedCount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="shredCount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="viewCount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="product" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Product" inverseName="ranking" inverseEntity="Product" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Category" positionX="-63" positionY="-18" width="128" height="90"/>
-        <element name="Product" positionX="-63" positionY="9" width="128" height="105"/>
+        <element name="Category" positionX="-392.015625" positionY="-176.7421875" width="128" height="90"/>
+        <element name="Product" positionX="-303.2109375" positionY="3.0390625" width="128" height="118"/>
+        <element name="Ranking" positionX="-63" positionY="27" width="128" height="120"/>
     </elements>
 </model>

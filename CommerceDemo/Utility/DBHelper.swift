@@ -77,7 +77,7 @@ class DBHelper{
     }
     
     //MARK:- Products
-    static func addProduct(product : ProductMapModel, categoryId : Int16){
+    static func addProduct(product : ProductMapModel, categoryId : Int16, rankDetails : RankingMapModel?){
         
         if let idProduct = product.id{
             
@@ -88,6 +88,17 @@ class DBHelper{
             productDB.addedDate = DateUtility.convertStringToTimeStamp(dateString: product.dateAdded, currentFormat: DateUtility.DATE_FORMAT_T_Z)
             productDB.categoryId = categoryId
             
+            if let rankDet = rankDetails{
+                
+                let entityRank = NSEntityDescription.entity(forEntityName: Table.RANKING.rawValue, in: managedContext)!
+                let rank = NSManagedObject(entity: entityRank, insertInto: managedContext) as! Ranking
+                
+                rank.id = idProduct
+                rank.viewCount = rankDet.viewCount ?? 0
+                rank.orderedCount = rankDet.orderCount ?? 0
+                rank.shredCount = rankDet.shareCount ?? 0
+                productDB.ranking = rank
+            }
             do {
                 try managedContext.save()
                 
@@ -105,6 +116,23 @@ class DBHelper{
         do {
             let results = try managedContext.fetch(fetchRequest);
             return results as? [Product]
+            
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+            return nil
+        }
+    }
+    
+    //MARK:- Ranking
+    static func getRatedProducts(type : String) -> [Ranking]?{
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: Table.RANKING.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "\(type) > 0")
+        let sortDesc = NSSortDescriptor(key: type, ascending: false)
+        fetchRequest.sortDescriptors = [sortDesc]
+        do {
+            let results = try managedContext.fetch(fetchRequest);
+            return results as? [Ranking]
             
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")

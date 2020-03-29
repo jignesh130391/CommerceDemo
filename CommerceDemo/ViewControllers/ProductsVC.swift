@@ -35,10 +35,11 @@ class ProductsVC: UIViewController {
     //MARK:- Set UI
     func setUI(){
         
-        self.navigationItem.title = "Category"
+        self.navigationItem.title = category?.name ?? "Products"
         self.navigationItem.hidesBackButton = true
         tblProducts.estimatedRowHeight = 35.0
         tblProducts.rowHeight = UITableView.automaticDimension
+        tblProducts.register(UINib(nibName: ProductCell.identifier, bundle: nil), forCellReuseIdentifier: ProductCell.identifier)
         self.displayBackButton()
     }
 }
@@ -61,7 +62,7 @@ extension ProductsVC : UITableViewDelegate, UITableViewDataSource{
         
         if let productDet = arrProducts?[indexPath.row]{
             cell.lblName.text = productDet.name ?? DATA_NOT_FOUND.DASH.rawValue
-            cell.lblDate.text = DateUtility.convertTimeStampToDesiredFormat(timestamp: productDet.addedDate, dateFormat: DateUtility.DATE_FORMAT_T_Z)
+            cell.lblDate.text = DateUtility.convertTimeStampToDesiredFormat(timestamp: productDet.addedDate, dateFormat: DateUtility.DD_MMM_YYYY)
         }else{
             cell.lblName.text = DATA_NOT_FOUND.DASH.rawValue
             cell.lblDate.text = DATA_NOT_FOUND.TIME.rawValue

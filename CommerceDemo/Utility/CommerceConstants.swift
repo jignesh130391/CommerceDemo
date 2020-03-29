@@ -73,6 +73,7 @@ enum Table : String{
     
     case CATEGORY = "Category"
     case PRODUCT = "Product"
+    case RANKING = "Ranking"
 }
 
 enum DATA_NOT_FOUND : String{
