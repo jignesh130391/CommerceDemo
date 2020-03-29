@@ -14,6 +14,8 @@ class ProductMapModel: Mappable {
     var id: Int16?
     var name: String?
     var dateAdded: String?
+    var variants : [VariationMapModel]?
+    var taxDetails : TaxMapModel?
     
     public required init?(map: Map){
     }
@@ -22,5 +24,7 @@ class ProductMapModel: Mappable {
         id    <- map["id"]
         name     <- map["name"]
         dateAdded     <- map["date_added"]
+        variants     <- map["variants"]
+        taxDetails   <- map["tax"]
     }
 }

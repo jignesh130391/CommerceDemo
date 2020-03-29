@@ -18,8 +18,8 @@ extension Ranking {
     }
 
     @NSManaged public var id: Int16
-    @NSManaged public var shredCount: Int64
     @NSManaged public var orderedCount: Int64
+    @NSManaged public var shredCount: Int64
     @NSManaged public var viewCount: Int64
     @NSManaged public var product: Product?
 

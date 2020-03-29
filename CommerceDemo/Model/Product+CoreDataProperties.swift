@@ -22,5 +22,24 @@ extension Product {
     @NSManaged public var id: Int16
     @NSManaged public var name: String?
     @NSManaged public var ranking: Ranking?
+    @NSManaged public var variations: NSSet?
+    @NSManaged public var tax: Tax?
+
+}
+
+// MARK: Generated accessors for variations
+extension Product {
+
+    @objc(addVariationsObject:)
+    @NSManaged public func addToVariations(_ value: Variants)
+
+    @objc(removeVariationsObject:)
+    @NSManaged public func removeFromVariations(_ value: Variants)
+
+    @objc(addVariations:)
+    @NSManaged public func addToVariations(_ values: NSSet)
+
+    @objc(removeVariations:)
+    @NSManaged public func removeFromVariations(_ values: NSSet)
 
 }

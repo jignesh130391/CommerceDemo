@@ -1,5 +1,5 @@
 //
-//  CategoryCell.swift
+//  ProductCell.swift
 //  CommerceDemo
 //
 //  Created by Jignesh on 28/03/20.

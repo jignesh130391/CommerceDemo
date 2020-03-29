@@ -99,6 +99,33 @@ class DBHelper{
                 rank.shredCount = rankDet.shareCount ?? 0
                 productDB.ranking = rank
             }
+            
+            if let taxDet = product.taxDetails{
+                
+                let entityRank = NSEntityDescription.entity(forEntityName: Table.TAX.rawValue, in: managedContext)!
+                let tax = NSManagedObject(entity: entityRank, insertInto: managedContext) as! Tax
+                
+                tax.name = taxDet.name
+                tax.tax = taxDet.tax ?? 0
+                productDB.tax = tax
+            }
+            
+            if let variants = product.variants, !variants.isEmpty{
+                
+                var arrVariants = NSSet(array: [])
+                for variant in variants{
+                    
+                    let entityVar = NSEntityDescription.entity(forEntityName: Table.VARIANTS.rawValue, in: managedContext)!
+                    let variantDet = NSManagedObject(entity: entityVar, insertInto: managedContext) as! Variants
+                    
+                    variantDet.id = variant.id ?? 0
+                    variantDet.color = variant.color
+                    variantDet.size = variant.sizeOfVariant ?? 0
+                    variantDet.price = variant.price ?? 0
+                    arrVariants = arrVariants.adding(variantDet) as NSSet
+                }
+                productDB.variations = arrVariants
+            }
             do {
                 try managedContext.save()
                 

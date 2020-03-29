@@ -1,5 +1,5 @@
 //
-//  ProductsVC.swift
+//  RatingVC.swift
 //  CommerceDemo
 //
 //  Created by Jignesh on 28/03/20.
@@ -141,6 +141,18 @@ extension RatingVC : UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        var details : Ranking? = nil
+        if tableView == tblViewedProducts{
+            details = arrViewedProducts?[indexPath.row]
+        }else if tableView == tblOrderedProducts{
+            details = arrOrderedProducts?[indexPath.row]
+        }else if tableView == tblSharedProducts{
+            details = arrSharedProducts?[indexPath.row]
+        }
+        if let prdDet = details?.product{
+            UtilityHelper.redirectToProductDetails(navigation: self.navigationController!, productDet: prdDet)
+        }
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  RankingMapModel.swift
+//  VariationMapModel.swift
 //  CommerceDemo
 //
 //  Created by Jignesh on 07/03/20.
@@ -9,12 +9,12 @@
 import Foundation
 import ObjectMapper
 
-class RankingMapModel: Mappable {
+class VariationMapModel: Mappable {
     
     var id: Int16?
-    var viewCount: Int64?
-    var shareCount: Int64?
-    var orderCount: Int64?
+    var color: String?
+    var sizeOfVariant: Int16?
+    var price: Double?
     
     public required init(){
     }
@@ -25,8 +25,8 @@ class RankingMapModel: Mappable {
     public func mapping(map: Map) {
         
         id    <- map["id"]
-        viewCount     <- map["view_count"]
-        orderCount     <- map["order_count"]
-        shareCount     <- map["shares"]
+        color     <- map["color"]
+        sizeOfVariant     <- map["size"]
+        price     <- map["price"]
     }
 }

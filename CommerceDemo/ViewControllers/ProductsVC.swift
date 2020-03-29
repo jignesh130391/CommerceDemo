@@ -71,5 +71,9 @@ extension ProductsVC : UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if let prdDet = arrProducts?[indexPath.row]{
+            UtilityHelper.redirectToProductDetails(navigation: self.navigationController!, productDet: prdDet)
+        }
     }
 }

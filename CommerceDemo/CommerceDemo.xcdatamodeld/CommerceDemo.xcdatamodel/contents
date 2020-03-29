@@ -11,6 +11,8 @@
         <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="ranking" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Ranking" inverseName="product" inverseEntity="Ranking" syncable="YES"/>
+        <relationship name="tax" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Tax" inverseName="product" inverseEntity="Tax" syncable="YES"/>
+        <relationship name="variations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Variants" inverseName="product" inverseEntity="Variants" syncable="YES"/>
     </entity>
     <entity name="Ranking" representedClassName="Ranking" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -19,9 +21,23 @@
         <attribute name="viewCount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="product" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Product" inverseName="ranking" inverseEntity="Product" syncable="YES"/>
     </entity>
+    <entity name="Tax" representedClassName="Tax" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tax" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="product" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Product" inverseName="tax" inverseEntity="Product" syncable="YES"/>
+    </entity>
+    <entity name="Variants" representedClassName="Variants" syncable="YES">
+        <attribute name="color" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="size" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="product" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Product" inverseName="variations" inverseEntity="Product" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Category" positionX="-392.015625" positionY="-176.7421875" width="128" height="90"/>
-        <element name="Product" positionX="-303.2109375" positionY="3.0390625" width="128" height="118"/>
+        <element name="Product" positionX="-303.2109375" positionY="3.0390625" width="128" height="150"/>
         <element name="Ranking" positionX="-63" positionY="27" width="128" height="120"/>
+        <element name="Variants" positionX="-225" positionY="-27" width="128" height="120"/>
+        <element name="Tax" positionX="-225" positionY="-27" width="128" height="90"/>
     </elements>
 </model>

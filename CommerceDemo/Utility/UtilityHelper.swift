@@ -2,7 +2,7 @@
 //  UtilityHelper.swift
 //  CommerceDemo
 //
-//  Created by Jignesh on 06/03/20.
+//  Created by Jignesh on 28/03/20.
 //  Copyright © 2020 Jignesh. All rights reserved.
 //
 
@@ -178,5 +178,17 @@ extension UtilityHelper{
         }
 
         return arrRanking
+    }
+}
+
+//MARK:- Redirection
+extension UtilityHelper{
+    
+    static func redirectToProductDetails(navigation : UINavigationController, productDet : Product){
+        
+        let story = UIStoryboard(name: StoryBoardName.PRODUCT, bundle: nil)
+        let vc = story.instantiateViewController(withIdentifier: ProductDetailVC.identifier) as! ProductDetailVC
+        vc.productDet = productDet
+        navigation.pushViewController(vc, animated: true)
     }
 }
